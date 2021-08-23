@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.frost.socialapp.ui.dashboard.DashboardFragment"
+        android:name="com.frost.socialapp.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_contacts"
-        android:name="com.frost.socialapp.ui.notifications.NotificationsFragment"
+        android:name="com.frost.socialapp.ui.contacts.ContactsFragment"
         android:label="@string/title_contacts"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_contacts" />
 </navigation>
