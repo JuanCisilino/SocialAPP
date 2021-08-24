@@ -26,6 +26,13 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setup()
+        session()
+    }
+
+    private fun session() {
+        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val email = prefs.getString(R.string.email.toString(), null)
+        email?.let { HomeActivity.start(this) }
     }
 
     private fun setup() {

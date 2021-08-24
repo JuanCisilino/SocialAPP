@@ -1,7 +1,9 @@
 package com.frost.socialmediaapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +22,7 @@ class HomeActivity : AppCompatActivity() {
 
     companion object{
         private const val userKey = "UserKey"
-        fun start(activity: Activity, user: UserData){
+        fun start(activity: Activity, user: UserData?= null){
             val intent = Intent(activity, HomeActivity::class.java).apply {
                 this.putExtra(userKey, user)
             }
@@ -30,9 +32,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     binding = ActivityHomeBinding.inflate(layoutInflater)
-        homeViewModel.setUserData(intent.getParcelableExtra(userKey)!!)
-     setContentView(binding.root)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        homeViewModel.setUserData(intent.getParcelableExtra(userKey)?: retrieveUser())
+        saveData()
+        setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -43,5 +46,24 @@ class HomeActivity : AppCompatActivity() {
             R.id.navigation_home, R.id.navigation_profile, R.id.navigation_contacts))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    private fun retrieveUser(): UserData {
+        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val userData = UserData()
+        userData.name = prefs.getString(R.string.name.toString(), null)
+        userData.email = prefs.getString(R.string.email.toString(), null)
+        userData.phone = prefs.getString(R.string.phone.toString(), null)
+        userData.photo = Uri.parse(prefs.getString(R.string.photo.toString(), null))
+        return userData
+    }
+
+    private fun saveData() {
+        val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+        prefs.putString(R.string.email.toString(), homeViewModel.userData?.email)
+        prefs.putString(R.string.phone.toString(), homeViewModel.userData?.phone)
+        prefs.putString(R.string.name.toString(), homeViewModel.userData?.name)
+        prefs.putString(R.string.photo.toString(), homeViewModel.userData?.photo.toString())
+        prefs.apply()
     }
 }
