@@ -1,10 +1,12 @@
 package com.frost.socialmediaapp
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.frost.socialapp.extensions.showAlert
 import com.frost.socialapp.extensions.signInWithCredential
+import com.frost.socialmediaapp.model.UserData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -14,6 +16,12 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity(R.layout.activity_login) {
 
     private val GOOGLE_SIGN_IN = 100
+
+    companion object{
+        fun start(context: Context){
+            context.startActivity(Intent(context, LoginActivity::class.java))
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +40,8 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
         }
     }
 
+    override fun onBackPressed() { }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_SIGN_IN){
@@ -42,7 +52,7 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
                     signInWithCredential(GoogleAuthProvider.getCredential(it.idToken, null))
                         .addOnCompleteListener {
                             if (it.isSuccessful){
-                                HomeActivity.start(this)
+                                it.result.user?.let { HomeActivity.start(this, UserData().convert(it)) }
                                 finish()
                             }else {
                                 showAlert()

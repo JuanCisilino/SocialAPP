@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.frost.socialmediaapp.ui.dashboard.DashboardFragment"
+        android:name="com.frost.socialmediaapp.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_contacts"
-        android:name="com.frost.socialmediaapp.ui.notifications.NotificationsFragment"
+        android:name="com.frost.socialmediaapp.ui.contacts.ContactsFragment"
         android:label="@string/title_contacts"
         tools:layout="@layout/fragment_contacts" />
 </navigation>

@@ -5,26 +5,33 @@ import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.frost.socialmediaapp.databinding.ActivityHomeBinding
+import com.frost.socialmediaapp.model.UserData
 
 class HomeActivity : AppCompatActivity() {
 
-private lateinit var binding: ActivityHomeBinding
+    private val homeViewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
+    private lateinit var binding: ActivityHomeBinding
 
     companion object{
-        fun start(activity: Activity){
-            activity.startActivity(Intent(activity, HomeActivity::class.java))
+        private const val userKey = "UserKey"
+        fun start(activity: Activity, user: UserData){
+            val intent = Intent(activity, HomeActivity::class.java).apply {
+                this.putExtra(userKey, user)
+            }
+            activity.startActivity(intent)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
      binding = ActivityHomeBinding.inflate(layoutInflater)
+        homeViewModel.setUserData(intent.getParcelableExtra(userKey)!!)
      setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView

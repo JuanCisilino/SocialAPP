@@ -1,4 +1,4 @@
-package com.frost.socialmediaapp.ui.notifications
+package com.frost.socialmediaapp.ui.contacts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.frost.socialmediaapp.databinding.FragmentContactsBinding
 
-class NotificationsFragment : Fragment() {
+class ContactsFragment : Fragment() {
 
   private lateinit var notificationsViewModel: NotificationsViewModel
 private var _binding: FragmentContactsBinding? = null
