@@ -3,12 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2638888888888889" />
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2638888888888889" />
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2638888888888889" />
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/layout/activity_main.xml" value="0.19429347826086957" />
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/layout/fragment_dashboard.xml" value="0.18931159420289856" />
-        <entry key="..\:/Users/creyescruz/Desktop/SocialApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3046875" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.2861111111111111" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/layout/activity_home.xml" value="0.22327898550724637" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/layout/activity_main.xml" value="0.22327898550724637" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/layout/fragment_dashboard.xml" value="0.22327898550724637" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/layout/fragment_home.xml" value="0.22327898550724637" />
+        <entry key="..\:/Users/creyescruz/Desktop/SocialMediaAPP/app/src/main/res/menu/bottom_nav_menu.xml" value="0.3046875" />
       </map>
     </option>
   </component>
