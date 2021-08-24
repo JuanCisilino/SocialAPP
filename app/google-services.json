@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "93098194178",
+    "project_id": "social-media-c6447",
+    "storage_bucket": "social-media-c6447.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:93098194178:android:d4200749d9ff5868b9be1b",
+        "android_client_info": {
+          "package_name": "com.frost.socialmediaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "93098194178-e1cvdclabhh64t6pkohbkdk7fkjsutb9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.frost.socialmediaapp",
+            "certificate_hash": "01abe45f0602b4fe1017b937d72edb176386f481"
+          }
+        },
+        {
+          "client_id": "93098194178-i23h1ef0bdhp0q1ogkd17tirkepe8hp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnoMk0Dy-t8w3_j_3xvAPSrv__QyLvQYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "93098194178-i23h1ef0bdhp0q1ogkd17tirkepe8hp6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
