@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.frost.socialapp.extensions.showAlert
 import com.frost.socialapp.extensions.signInWithCredential
-import com.frost.socialmediaapp.model.UserData
+import com.frost.socialmediaapp.entities.UserData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException

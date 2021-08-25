@@ -13,7 +13,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.frost.socialmediaapp.databinding.ActivityHomeBinding
-import com.frost.socialmediaapp.model.UserData
+import com.frost.socialmediaapp.entities.UserData
 
 class HomeActivity : AppCompatActivity() {
 
@@ -47,6 +47,8 @@ class HomeActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
+    override fun onBackPressed() { }
 
     private fun retrieveUser(): UserData {
         val prefs = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)

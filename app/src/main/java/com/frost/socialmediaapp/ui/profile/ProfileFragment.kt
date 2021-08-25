@@ -35,9 +35,8 @@ class ProfileFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View {
     _binding = FragmentProfileBinding.inflate(inflater, container, false)
-    val root: View = binding.root
     setProfileView()
-    return root
+    return binding.root
   }
 
   private fun setProfileView() {

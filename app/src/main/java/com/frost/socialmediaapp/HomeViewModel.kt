@@ -1,7 +1,7 @@
 package com.frost.socialmediaapp
 
 import androidx.lifecycle.ViewModel
-import com.frost.socialmediaapp.model.UserData
+import com.frost.socialmediaapp.entities.UserData
 
 class HomeViewModel: ViewModel() {
 

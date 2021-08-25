@@ -1,4 +1,4 @@
-package com.frost.socialmediaapp.model
+package com.frost.socialmediaapp.entities
 
 import android.net.Uri
 import android.os.Parcelable
@@ -6,12 +6,12 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-open class UserData(
+data class UserData(
     var name: String?= null,
     var email: String?= null,
     var phone: String?= null,
     var photo: Uri?= null
-): Comparable<UserData>, Parcelable{
+): Parcelable{
 
     fun convert(user:FirebaseUser): UserData{
         this.name = user.displayName
@@ -21,7 +21,4 @@ open class UserData(
         return this
     }
 
-    override fun compareTo(other: UserData): Int {
-        return 1
-    }
 }
