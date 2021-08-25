@@ -38,23 +38,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/buttonsLayout"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btCapture"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Capture" />
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="match_parent"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btGallery"

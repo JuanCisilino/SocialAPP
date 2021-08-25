@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
+import com.frost.socialmediaapp.HomeActivity
 import com.frost.socialmediaapp.HomeViewModel
 import com.frost.socialmediaapp.LoginActivity
+import com.frost.socialmediaapp.R
 import com.frost.socialmediaapp.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
@@ -19,6 +21,7 @@ import com.squareup.picasso.Picasso
 class ProfileFragment : Fragment() {
 
   private lateinit var homeViewModel: HomeViewModel
+  private var homeActivity = HomeActivity()
   private var _binding: FragmentProfileBinding? = null
   // This property is only valid between onCreateView and
   // onDestroyView.
@@ -48,8 +51,14 @@ class ProfileFragment : Fragment() {
   }
 
   private fun logOutAndFinish(){
+    clearSharedPrefs()
     FirebaseAuth.getInstance().signOut()
     this.context?.let { LoginActivity.start(it) }
+  }
+
+  private fun clearSharedPrefs(){
+    val prefs = activity?.getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+    prefs?.edit()?.clear()?.apply()
   }
 
   override fun onDestroyView() {
