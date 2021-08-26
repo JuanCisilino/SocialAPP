@@ -14,11 +14,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.frost.socialmediaapp.databinding.ActivityHomeBinding
 import com.frost.socialmediaapp.entities.UserData
+import com.frost.socialmediaapp.ui.home.HomeFragment
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class HomeActivity : AppCompatActivity() {
 
     private val homeViewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
     private lateinit var binding: ActivityHomeBinding
+    private val db = Firebase.firestore
 
     companion object{
         private const val userKey = "UserKey"
@@ -34,18 +38,22 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         homeViewModel.setUserData(intent.getParcelableExtra(userKey)?: retrieveUser())
-        saveData()
+        getDataFromFirestore()
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(setOf(
             R.id.navigation_home, R.id.navigation_profile, R.id.navigation_contacts))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        saveData()
+    }
+
+    private fun getDataFromFirestore() {
+        db.collection("users").document(homeViewModel.userData?.email!!).get()
+            .addOnSuccessListener { homeViewModel.userData?.phone = it.get("phone") as String? }
     }
 
     override fun onBackPressed() { }
@@ -68,4 +76,5 @@ class HomeActivity : AppCompatActivity() {
         prefs.putString(R.string.photo.toString(), homeViewModel.userData?.photo.toString())
         prefs.apply()
     }
+
 }

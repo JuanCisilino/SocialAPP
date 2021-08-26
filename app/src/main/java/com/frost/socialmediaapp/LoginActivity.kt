@@ -11,11 +11,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(R.layout.activity_login) {
 
     private val GOOGLE_SIGN_IN = 100
+    private val db = Firebase.firestore
 
     companion object{
         fun start(context: Context){
@@ -59,7 +62,12 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
                     signInWithCredential(GoogleAuthProvider.getCredential(it.idToken, null))
                         .addOnCompleteListener {
                             if (it.isSuccessful){
-                                it.result.user?.let { HomeActivity.start(this, UserData().convert(it)) }
+                                val user = UserData().convert(it.result.user!!)
+                                db.collection("users").document(user.email?:"").set(
+                                    hashMapOf( "name" to user.name,
+                                        "email" to user.email,
+                                        "photo_url" to user.photo.toString()))
+                                HomeActivity.start(this, user)
                                 finish()
                             }else {
                                 showAlert()

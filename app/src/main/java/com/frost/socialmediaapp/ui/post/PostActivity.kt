@@ -1,6 +1,7 @@
 package com.frost.socialmediaapp.ui.post
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -20,6 +21,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_post.*
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,8 +35,8 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
     private lateinit var urltask: Task<Uri>
 
     companion object{
-        fun start(context: Context){
-            context.startActivity(Intent(context, PostActivity::class.java))
+        fun startActivityForResult(activity: Activity, requestCode: Int){
+            activity.startActivityForResult(Intent(activity, PostActivity::class.java), requestCode)
         }
     }
 
@@ -52,15 +54,21 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         buttonUpload.setOnClickListener {
             pushToDb()
             Toast.makeText(this,"Registered", Toast.LENGTH_SHORT).show()
-            finish()
+            setResultAndFinish()
         }
+    }
+
+    private fun setResultAndFinish(){
+        val resultIntent = Intent()
+        setResult(RESULT_OK, resultIntent)
+        finish()
     }
 
     private fun pushToDb() {
         database = FirebaseDatabase.getInstance()
         reference = database.getReference("posts")
         val post = getPost()
-        reference.child("${post.date}").setValue(post)
+        reference.child("${post.date}:${post.userName}").setValue(post)
     }
 
     private fun getPost(): Post {
@@ -70,6 +78,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         post.userImage = user?.photoUrl.toString()
         post.description = editTextDescription.text.toString()
         post.image = getUriString()
+        post.timestamp = Calendar.getInstance().timeInMillis
         return post
     }
 
