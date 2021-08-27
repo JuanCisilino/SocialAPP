@@ -15,6 +15,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.frost.socialmediaapp.databinding.ActivityHomeBinding
 import com.frost.socialmediaapp.entities.UserData
 import com.frost.socialmediaapp.ui.home.HomeFragment
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -64,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
         userData.name = prefs.getString(R.string.name.toString(), null)
         userData.email = prefs.getString(R.string.email.toString(), null)
         userData.phone = prefs.getString(R.string.phone.toString(), null)
-        userData.photo = Uri.parse(prefs.getString(R.string.photo.toString(), null))
+        userData.photo = prefs.getString(R.string.photo.toString(), null)
         return userData
     }
 

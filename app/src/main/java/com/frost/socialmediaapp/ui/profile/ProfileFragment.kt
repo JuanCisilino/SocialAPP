@@ -2,6 +2,7 @@ package com.frost.socialmediaapp.ui.profile
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -60,7 +61,7 @@ class ProfileFragment : Fragment() {
     binding.nameTextView.text = homeViewModel.userData?.name?:""
     binding.emailTextView.text = homeViewModel.userData?.email?:""
     binding.phoneEditText.hint = homeViewModel.userData?.phone?:"+541124562155"
-    Picasso.get().load(homeViewModel.userData?.photo).into(binding.photoImageView)
+    Picasso.get().load(Uri.parse(homeViewModel.userData?.photo)).into(binding.photoImageView)
   }
 
   private fun saveData() {
@@ -75,7 +76,7 @@ class ProfileFragment : Fragment() {
     db.collection("users").document(homeViewModel.userData?.email!!).set(
       hashMapOf( "name" to homeViewModel.userData?.name,
         "email" to homeViewModel.userData?.email,
-        "photo_url" to homeViewModel.userData?.photo.toString(),
+        "photo" to homeViewModel.userData?.photo.toString(),
         "phone" to homeViewModel.userData?.phone))
   }
 

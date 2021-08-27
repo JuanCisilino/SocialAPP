@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_post.*
+import kotlinx.android.synthetic.main.item_post.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,9 +53,17 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
     private fun setUploadButton() {
         buttonUpload.setOnClickListener {
+            validateAndPush()
+        }
+    }
+
+    private fun validateAndPush(){
+        if (editTextDescription.text.toString().isNotEmpty()){
             pushToDb()
-            Toast.makeText(this,"Registered", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Uploading", Toast.LENGTH_SHORT).show()
             setResultAndFinish()
+        } else {
+            Toast.makeText(this,"Must write a description", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -68,7 +77,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         database = FirebaseDatabase.getInstance()
         reference = database.getReference("posts")
         val post = getPost()
-        reference.child("${post.date}:${post.userName}").setValue(post)
+        reference.child("${post.date}:${post.userName}".lowercase(Locale.getDefault())).setValue(post)
     }
 
     private fun getPost(): Post {
@@ -102,7 +111,6 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 120) setSelectedImage(data?.data)
-        setVisibility()
     }
 
     private fun setSelectedImage(uri: Uri?){
@@ -112,6 +120,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
             uploadTask = reference.putFile(it)
             urltask = uploadTask.continueWithTask { reference.downloadUrl }
             Picasso.get().load(it).into(imageView)
+            setVisibility()
         }
     }
 

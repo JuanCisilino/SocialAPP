@@ -8,9 +8,12 @@ import com.frost.socialapp.extensions.showAlert
 import com.frost.socialapp.extensions.signInWithCredential
 import com.frost.socialmediaapp.entities.UserData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
@@ -19,6 +22,8 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
 
     private val GOOGLE_SIGN_IN = 100
     private val db = Firebase.firestore
+    private val database = FirebaseDatabase.getInstance()
+    private val reference = database.getReference("users")
 
     companion object{
         fun start(context: Context){
@@ -58,15 +63,12 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try{
                 val account = task.getResult(ApiException::class.java)
-                account?.let {
-                    signInWithCredential(GoogleAuthProvider.getCredential(it.idToken, null))
+                account?.let { account ->
+                    signInWithCredential(GoogleAuthProvider.getCredential(account.idToken, null))
                         .addOnCompleteListener {
                             if (it.isSuccessful){
                                 val user = UserData().convert(it.result.user!!)
-                                db.collection("users").document(user.email?:"").set(
-                                    hashMapOf( "name" to user.name,
-                                        "email" to user.email,
-                                        "photo_url" to user.photo.toString()))
+                                saveInDatabase(user, account)
                                 HomeActivity.start(this, user)
                                 finish()
                             }else {
@@ -78,5 +80,13 @@ class LoginActivity : AppCompatActivity(R.layout.activity_login) {
                 showAlert()
             }
         }
+    }
+
+    private fun saveInDatabase(user: UserData, account: GoogleSignInAccount){
+        db.collection("users").document(user.email?:"").set(
+            hashMapOf( "name" to user.name,
+                "email" to user.email,
+                "photo" to user.photo.toString()))
+        reference.child("${account.id}").setValue(user)
     }
 }

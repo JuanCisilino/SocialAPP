@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
 
   private lateinit var homeViewModel: HomeViewModel
   private var postList = ArrayList<Post>()
-  private var adapter = PostAdapter(postList)
+  private lateinit var adapter : PostAdapter
   private lateinit var binding: FragmentHomeBinding
   private var database = FirebaseDatabase.getInstance()
   private var reference = database.getReference("posts")
@@ -43,6 +43,7 @@ class HomeFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    adapter = context?.let { PostAdapter(postList, it) }!!
     setAddButton()
     getData()
     setUpSwipeRefreshLayout()
@@ -56,8 +57,8 @@ class HomeFragment : Fragment() {
           val post = data.getValue(Post::class.java)
           postList.add(post as Post)
         }
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = adapter
+        binding.postListrecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.postListrecyclerView.adapter = adapter
       }
       override fun onCancelled(error: DatabaseError) {}
 
