@@ -1,21 +1,17 @@
 package com.frost.socialmediaapp.ui.home
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.frost.socialmediaapp.HomeViewModel
 import com.frost.socialmediaapp.databinding.FragmentHomeBinding
 import com.frost.socialmediaapp.entities.Post
 import com.frost.socialmediaapp.ui.post.PostActivity
-import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,17 +19,9 @@ import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
 
-  private lateinit var homeViewModel: HomeViewModel
-  private var postList = ArrayList<Post>()
+  private val viewModel by lazy { ViewModelProvider(this).get(HomeFragmentViewModel::class.java) }
   private lateinit var adapter : PostAdapter
   private lateinit var binding: FragmentHomeBinding
-  private var database = FirebaseDatabase.getInstance()
-  private var reference = database.getReference("posts")
-
-  override fun onAttach(context: Context) {
-    super.onAttach(context)
-    homeViewModel = ViewModelProvider(context as FragmentActivity).get(HomeViewModel::class.java)
-  }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View {
@@ -43,40 +31,40 @@ class HomeFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    adapter = context?.let { PostAdapter(postList, it) }!!
     setAddButton()
-    getData()
+    viewModel.getData()
     setUpSwipeRefreshLayout()
     refreshEvery(60)
+    subscribeToLiveData()
   }
 
-  private fun getData() {
-    reference.addValueEventListener(object : ValueEventListener{
-      override fun onDataChange(snapshot: DataSnapshot) {
-        for (data in snapshot.children.reversed()){
-          val post = data.getValue(Post::class.java)
-          postList.add(post as Post)
-        }
-        binding.postListrecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.postListrecyclerView.adapter = adapter
-      }
-      override fun onCancelled(error: DatabaseError) {}
+  private fun subscribeToLiveData() {
+    viewModel.dataLiveData.observe(viewLifecycleOwner) { showData(it) }
+    viewModel.errorLiveData.observe(viewLifecycleOwner) { showError() }
+  }
 
-    })
+  private fun showError() {
+    Toast.makeText(requireContext(),"Error loading data", Toast.LENGTH_SHORT).show()
+  }
+
+  private fun showData(postList: ArrayList<Post>) {
+    adapter = context?.let { PostAdapter(postList.reversed(), it) }!!
+    binding.postListrecyclerView.layoutManager = LinearLayoutManager(context)
+    binding.postListrecyclerView.adapter = adapter
   }
 
   private fun refreshEvery(seconds: Long){
     GlobalScope.launch {
       while (true) {
         delay(TimeUnit.SECONDS.toMillis(seconds))
-        getData()
+        viewModel.getData()
       }
     }
   }
 
   private fun setUpSwipeRefreshLayout() {
     binding.thingsSwipeRefreshLayout.setOnRefreshListener {
-      getData()
+      viewModel.getData()
       binding.thingsSwipeRefreshLayout.isRefreshing = false
     }
   }

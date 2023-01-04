@@ -2,7 +2,6 @@ package com.frost.socialmediaapp.ui.post
 
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -10,28 +9,17 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.frost.socialmediaapp.R
-import com.frost.socialmediaapp.entities.Post
+import com.frost.socialmediaapp.extensions.getDate
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_post.*
-import kotlinx.android.synthetic.main.item_post.*
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
-    private lateinit var database: FirebaseDatabase
-    private lateinit var reference: DatabaseReference
-    private lateinit var storageReference: StorageReference
-    private var user = FirebaseAuth.getInstance().currentUser
+    private val viewModel by lazy { ViewModelProvider(this).get(PostViewModel::class.java) }
     private lateinit var uploadTask: UploadTask
     private lateinit var urltask: Task<Uri>
 
@@ -59,7 +47,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
     private fun validateAndPush(){
         if (editTextDescription.text.toString().isNotEmpty()){
-            pushToDb()
+            viewModel.pushToDb(getDate(), editTextDescription.text.toString(), getUriString())
             Toast.makeText(this,"Uploading", Toast.LENGTH_SHORT).show()
             setResultAndFinish()
         } else {
@@ -71,33 +59,6 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         val resultIntent = Intent()
         setResult(RESULT_OK, resultIntent)
         finish()
-    }
-
-    private fun pushToDb() {
-        database = FirebaseDatabase.getInstance()
-        reference = database.getReference("posts")
-        val post = getPost()
-        reference.child("${post.date}:${post.userName}".lowercase(Locale.getDefault())).setValue(post)
-    }
-
-    private fun getPost(): Post {
-        val post = Post()
-        post.date = getDate()
-        post.userName = user?.displayName
-        post.userImage = user?.photoUrl.toString()
-        post.description = editTextDescription.text.toString()
-        post.image = getUriString()
-        post.timestamp = Calendar.getInstance().timeInMillis
-        return post
-    }
-
-    private fun getDate(): String {
-        val cal = Calendar.getInstance()
-        val currentDate = SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault())
-        val date = currentDate.format(cal.time)
-        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val time = currentTime.format(cal.time)
-        return "$date:$time"
     }
 
     private fun setGalleryButton() {
@@ -114,9 +75,8 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
     }
 
     private fun setSelectedImage(uri: Uri?){
-        storageReference = FirebaseStorage.getInstance().getReference("Post Images")
         uri?.let{
-            val reference = storageReference.child(System.currentTimeMillis().toString()+"."+getFileExt(it))
+            val reference = viewModel.repository.storageReference.child(System.currentTimeMillis().toString()+"."+getFileExt(it))
             uploadTask = reference.putFile(it)
             urltask = uploadTask.continueWithTask { reference.downloadUrl }
             Picasso.get().load(it).into(imageView)

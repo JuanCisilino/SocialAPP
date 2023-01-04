@@ -1,4 +1,4 @@
-package com.frost.socialapp.extensions
+package com.frost.socialmediaapp.extensions
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -7,6 +7,8 @@ import com.frost.socialmediaapp.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun Activity.logEventAnalytics(message: String, name:String){
     val analytics = FirebaseAnalytics.getInstance(this)
@@ -33,4 +35,13 @@ fun Activity.showAlert(){
     builder.setPositiveButton(getString(R.string.ok), null)
     val dialog = builder.create()
     dialog.show()
+}
+
+fun Activity.getDate(): String {
+    val cal = Calendar.getInstance()
+    val currentDate = SimpleDateFormat("dd-MMMM-yyyy", Locale.getDefault())
+    val date = currentDate.format(cal.time)
+    val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val time = currentTime.format(cal.time)
+    return "$date:$time"
 }
