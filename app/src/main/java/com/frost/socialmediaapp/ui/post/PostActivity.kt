@@ -3,12 +3,15 @@ package com.frost.socialmediaapp.ui.post
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import com.frost.socialmediaapp.R
 import com.frost.socialmediaapp.extensions.getDate
@@ -16,6 +19,8 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_post.*
+import java.io.ByteArrayOutputStream
+import java.io.File
 
 class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
@@ -36,6 +41,7 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
     private fun setButtons() {
         setGalleryButton()
+        setCaptureButton()
         setUploadButton()
     }
 
@@ -61,6 +67,13 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         finish()
     }
 
+    private fun setCaptureButton() {
+        btCamera.setOnClickListener {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(intent, 100)
+        }
+    }
+
     private fun setGalleryButton() {
         btGallery.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
@@ -71,17 +84,29 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 120) setSelectedImage(data?.data)
+        when(requestCode){
+            100 -> setSelectedBitmap(data?.extras?.get("data") as Bitmap)
+            120 -> setSelectedUri(data?.data)
+        }
     }
 
-    private fun setSelectedImage(uri: Uri?){
+    private fun setSelectedUri(uri: Uri?){
         uri?.let{
             val reference = viewModel.repository.storageReference.child(System.currentTimeMillis().toString()+"."+getFileExt(it))
             uploadTask = reference.putFile(it)
             urltask = uploadTask.continueWithTask { reference.downloadUrl }
-            Picasso.get().load(it).into(imageView)
-            setVisibility()
+            setImage(it)
         }
+    }
+
+    private fun setSelectedBitmap(bitmap: Bitmap?) {
+        val uri = bitmap?.let { bitmapToUri(it,System.currentTimeMillis().toString()) }
+        setSelectedUri(uri)
+    }
+
+    private fun setImage(uri: Uri){
+        Picasso.get().load(uri).into(imageView)
+        setVisibility()
     }
 
     private fun getUriString(): String =
@@ -97,5 +122,22 @@ class PostActivity : AppCompatActivity(R.layout.activity_post) {
         buttonsLayout.visibility = View.GONE
         imageLayout.visibility = View.VISIBLE
         buttonUpload.visibility = View.VISIBLE
+    }
+
+    //turn bitmap into uri
+    fun bitmapToUri(bitmap: Bitmap, name: String): Uri {
+
+        val file = File(this.cacheDir,name) //Get Access to a local file.
+        file.delete() // Delete the File, just in Case, that there was still another File
+        file.createNewFile()
+        val fileOutputStream = file.outputStream()
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream)
+        val bytearray = byteArrayOutputStream.toByteArray()
+        fileOutputStream.write(bytearray)
+        fileOutputStream.flush()
+        fileOutputStream.close()
+        byteArrayOutputStream.close()
+        return file.toUri()
     }
 }

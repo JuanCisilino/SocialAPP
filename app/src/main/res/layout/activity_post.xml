@@ -7,36 +7,9 @@
     tools:context=".ui.post.PostActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:id="@+id/imageLayout"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="invisible">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="10dp">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_launcher_background"/>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:id="@+id/buttonsLayout"
         android:layout_marginTop="30dp"
         android:gravity="center"
@@ -45,14 +18,48 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btGallery"
-            android:layout_weight="1"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btCamera"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Agregar de\nGaleria"/>
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_photo_camera_24"/>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btGallery"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_image_24"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/imageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonsLayout">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="180dp"
+            android:layout_height="300dp"
+            app:cardCornerRadius="10dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                app:srcCompat="@drawable/ic_launcher_background" />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -60,9 +67,7 @@
         android:id="@+id/editTextDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_margin="20dp"
         android:hint="Descripcion"
         android:inputType="textPersonName"
         android:minHeight="48dp"
